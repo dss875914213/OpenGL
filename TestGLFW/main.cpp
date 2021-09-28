@@ -1,3 +1,4 @@
+#include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include <iostream>
 
@@ -20,8 +21,13 @@ int main()
 	}
 	glfwMakeContextCurrent(window);
 
-	glViewport(0, 0, 800, 600);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		return -1;
+	}
 
 	while (!glfwWindowShouldClose(window))
 	{
