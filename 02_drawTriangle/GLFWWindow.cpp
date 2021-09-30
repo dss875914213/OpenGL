@@ -12,7 +12,6 @@ void GLFWWindow::Initialize()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
 }
 
 bool GLFWWindow::CreateWindow()
@@ -27,20 +26,15 @@ bool GLFWWindow::CreateWindow()
 	glfwSetKeyCallback(m_window, processInput);
 	m_openGL = new MyOpenGL(m_width, m_height);
 
-	m_openGL->SetVertexShader();
-	m_openGL->SetFragmentShader();
+	m_openGL->SetVertexConfig();
 	m_openGL->BuildShaderProgram();
-
-	m_openGL->SetVAO();
-	m_openGL->SetVertexData();
-	m_openGL->SetVertexAttribute();
-
 	m_openGL->SetViewPort();
 	return true;
 }
 
 void GLFWWindow::Destroy()
 {
+	m_openGL->Destroy();
 	glfwTerminate();
 }
 

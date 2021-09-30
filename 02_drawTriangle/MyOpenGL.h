@@ -13,8 +13,9 @@ public:
 	void SetFragmentShader();
 	void BuildShaderProgram();
 	void SetVertexAttribute();
-	void SetVAO();
+	void SetVertexConfig();
 	void Render();
+	void Destroy();
 private:
 	float *m_vertices;
 	int m_verticesSize;
