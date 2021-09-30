@@ -12,8 +12,7 @@ int main()
 	GLFWWindow* glfwWindow = new GLFWWindow(WIDTH, HEIGHT);
 	glfwWindow->Initialize();
 	glfwWindow->CreateWindow();
-	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-	glViewport(0, 0, WIDTH, HEIGHT);
+	
 	glfwWindow->Run();
 	//std::thread t = std::thread(&GLFWWindow::Run, glfwWindow);
 	//t.join();

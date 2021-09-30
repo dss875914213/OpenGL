@@ -4,7 +4,6 @@
 GLFWWindow::GLFWWindow(int width, int height)
 	:m_width(width), m_height(height), m_window(NULL)
 {
-
 }
 
 void GLFWWindow::Initialize()
@@ -13,6 +12,7 @@ void GLFWWindow::Initialize()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 }
 
 bool GLFWWindow::CreateWindow()
@@ -25,6 +25,17 @@ bool GLFWWindow::CreateWindow()
 	}
 	glfwMakeContextCurrent(m_window);
 	glfwSetKeyCallback(m_window, processInput);
+	m_openGL = new MyOpenGL(m_width, m_height);
+
+	m_openGL->SetVertexShader();
+	m_openGL->SetFragmentShader();
+	m_openGL->BuildShaderProgram();
+
+	m_openGL->SetVAO();
+	m_openGL->SetVertexData();
+	m_openGL->SetVertexAttribute();
+
+	m_openGL->SetViewPort();
 	return true;
 }
 
@@ -39,6 +50,8 @@ void GLFWWindow::Run()
 	{
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		m_openGL->Render();
 		glfwSwapBuffers(m_window);
 		glfwPollEvents();
 	}

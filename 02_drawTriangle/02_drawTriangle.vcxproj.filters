@@ -24,10 +24,20 @@
     <ClCompile Include="GLFWWindow.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="MyOpenGL.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLFWWindow.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MyOpenGL.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shader.vs" />
+    <None Include="shader.fs" />
   </ItemGroup>
 </Project>
