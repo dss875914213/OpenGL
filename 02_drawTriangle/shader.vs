@@ -6,7 +6,7 @@ out vec3 toFragmentColor;
 
 void main()
 {
-	gl_Position = vec4(vertexPosition, 1.0f);
+	gl_Position = vec4(vertexPosition.x, -vertexPosition.y, vertexPosition.z, 1.0f);
 	toFragmentColor = vertexColor;
 }
 
