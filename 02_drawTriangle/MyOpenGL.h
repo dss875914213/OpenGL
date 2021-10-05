@@ -13,7 +13,8 @@ public:
 	void SetVertexData2();
 	void SetIndexData();
 	void SetVertexShader();
-	void SetFragmentShader();
+	void SetFragmentShader1();
+	void SetFragmentShader2();
 	void BuildShaderProgram();
 	void SetVertexAttribute();
 	void SetVertexConfig();
@@ -31,7 +32,7 @@ private:
 	unsigned int m_VAO[2];
 	unsigned int m_EBO;
 	unsigned int m_vsShader;
-	unsigned int m_fsShader;
-	unsigned int m_shaderProgram;
+	unsigned int m_fsShader[2];
+	unsigned int m_shaderProgram[2];
 };
 

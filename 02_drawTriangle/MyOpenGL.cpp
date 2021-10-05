@@ -88,7 +88,29 @@ void MyOpenGL::SetVertexShader()
 	}
 }
 
-void MyOpenGL::SetFragmentShader()
+void MyOpenGL::SetFragmentShader1()
+{
+	const char* fragShaderSources =
+		"#version 330 core\n"
+		"out vec4 FragColor;\n"
+		"void main()\n"
+		"{\n"
+		"	FragColor = vec4(1.0f, 1.0f, 0.0f, 1.0f);\n"
+		"}\n";
+	m_fsShader[0] = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(m_fsShader[0], 1, &fragShaderSources, NULL);
+	glCompileShader(m_fsShader[0]);
+	int success;
+	char log[512];
+	glGetShaderiv(m_fsShader[0], GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(m_fsShader[0], 512, NULL, log);
+		std::cout << "Failed to Compile fragment shader " << log << std::endl;
+	}
+}
+
+void MyOpenGL::SetFragmentShader2()
 {
 	const char* fragShaderSources =
 		"#version 330 core\n"
@@ -97,15 +119,15 @@ void MyOpenGL::SetFragmentShader()
 		"{\n"
 		"	FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 		"}\n";
-	m_fsShader =glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(m_fsShader, 1, &fragShaderSources, NULL);
-	glCompileShader(m_fsShader);
+	m_fsShader[1] = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(m_fsShader[1], 1, &fragShaderSources, NULL);
+	glCompileShader(m_fsShader[1]);
 	int success;
 	char log[512];
-	glGetShaderiv(m_fsShader, GL_COMPILE_STATUS, &success);
+	glGetShaderiv(m_fsShader[1], GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
-		glGetShaderInfoLog(m_fsShader, 512, NULL, log);
+		glGetShaderInfoLog(m_fsShader[1], 512, NULL, log);
 		std::cout << "Failed to Compile fragment shader " << log << std::endl;
 	}
 }
@@ -113,21 +135,28 @@ void MyOpenGL::SetFragmentShader()
 void MyOpenGL::BuildShaderProgram()
 {
 	SetVertexShader();
-	SetFragmentShader();
-	m_shaderProgram = glCreateProgram();
-	glAttachShader(m_shaderProgram, m_vsShader);
-	glAttachShader(m_shaderProgram, m_fsShader);
-	glLinkProgram(m_shaderProgram);
+	SetFragmentShader1();
+	SetFragmentShader2();
+	m_shaderProgram[0] = glCreateProgram();
+	m_shaderProgram[1] = glCreateProgram();
+	glAttachShader(m_shaderProgram[0], m_vsShader);
+	glAttachShader(m_shaderProgram[0], m_fsShader[0]);
+	glLinkProgram(m_shaderProgram[0]);
+
+	glAttachShader(m_shaderProgram[1], m_vsShader);
+	glAttachShader(m_shaderProgram[1], m_fsShader[1]);
+	glLinkProgram(m_shaderProgram[1]);
 	int success;
 	char log[512];
-	glGetShaderiv(m_shaderProgram, GL_LINK_STATUS, &success);
+	glGetShaderiv(m_shaderProgram[0], GL_LINK_STATUS, &success);
 	if (!success)
 	{
-		glGetShaderInfoLog(m_shaderProgram, 512, NULL, log);
+		glGetShaderInfoLog(m_shaderProgram[0], 512, NULL, log);
 		std::cout << "Failed to link shader " << log << std::endl;
 	}
 	glDeleteShader(m_vsShader);
-	glDeleteShader(m_fsShader);
+	glDeleteShader(m_fsShader[0]);
+	glDeleteShader(m_fsShader[1]);
 }
 
 void MyOpenGL::SetVertexAttribute()
@@ -157,10 +186,11 @@ void MyOpenGL::SetVertexConfig()
 
 void MyOpenGL::Render()
 {
-	glUseProgram(m_shaderProgram);
+	glUseProgram(m_shaderProgram[0]);
 	glBindVertexArray(m_VAO[0]);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glUseProgram(m_shaderProgram[1]);
 	glBindVertexArray(m_VAO[1]);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
@@ -169,5 +199,8 @@ void MyOpenGL::Destroy()
 {
 	glDeleteVertexArrays(1, &m_VAO[0]);
 	glDeleteBuffers(1, &m_VBO[0]);
-	glDeleteProgram(m_shaderProgram);
+	glDeleteVertexArrays(1, &m_VAO[1]);
+	glDeleteBuffers(1, &m_VBO[1]);
+	glDeleteProgram(m_shaderProgram[0]);
+	glDeleteProgram(m_shaderProgram[1]);
 }
