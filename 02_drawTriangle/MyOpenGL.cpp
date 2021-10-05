@@ -136,7 +136,6 @@ void MyOpenGL::BuildShaderProgram()
 {
 	m_shader = new MyShader("D:\\1_WorkSpace\\1_Coding\\OpenGL\\02_drawTriangle\\shader.vs", 
 		"D:\\1_WorkSpace\\1_Coding\\OpenGL\\02_drawTriangle\\shader.fs");
-
 	//SetVertexShader();
 	//SetFragmentShader1();
 	//SetFragmentShader2();
@@ -190,6 +189,8 @@ void MyOpenGL::SetVertexConfig()
 void MyOpenGL::Render()
 {
 	m_shader->use();
+	glUniform4f(glGetUniformLocation(m_shader->ID, "color"), 0.0f, 1.0f, 0.0f, 1.0f);
+
 	//glUseProgram(m_shaderProgram[0]);
 	glBindVertexArray(m_VAO[0]);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
