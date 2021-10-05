@@ -2,6 +2,7 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include <memory>
+#include "MyShader.h"
 
 class MyOpenGL
 {
@@ -34,5 +35,7 @@ private:
 	unsigned int m_vsShader;
 	unsigned int m_fsShader[2];
 	unsigned int m_shaderProgram[2];
+	MyShader* m_shader;
+
 };
 

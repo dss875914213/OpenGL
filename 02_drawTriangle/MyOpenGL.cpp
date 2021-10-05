@@ -134,29 +134,32 @@ void MyOpenGL::SetFragmentShader2()
 
 void MyOpenGL::BuildShaderProgram()
 {
-	SetVertexShader();
-	SetFragmentShader1();
-	SetFragmentShader2();
-	m_shaderProgram[0] = glCreateProgram();
-	m_shaderProgram[1] = glCreateProgram();
-	glAttachShader(m_shaderProgram[0], m_vsShader);
-	glAttachShader(m_shaderProgram[0], m_fsShader[0]);
-	glLinkProgram(m_shaderProgram[0]);
+	m_shader = new MyShader("D:\\1_WorkSpace\\1_Coding\\OpenGL\\02_drawTriangle\\shader.vs", 
+		"D:\\1_WorkSpace\\1_Coding\\OpenGL\\02_drawTriangle\\shader.fs");
 
-	glAttachShader(m_shaderProgram[1], m_vsShader);
-	glAttachShader(m_shaderProgram[1], m_fsShader[1]);
-	glLinkProgram(m_shaderProgram[1]);
-	int success;
-	char log[512];
-	glGetShaderiv(m_shaderProgram[0], GL_LINK_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(m_shaderProgram[0], 512, NULL, log);
-		std::cout << "Failed to link shader " << log << std::endl;
-	}
-	glDeleteShader(m_vsShader);
-	glDeleteShader(m_fsShader[0]);
-	glDeleteShader(m_fsShader[1]);
+	//SetVertexShader();
+	//SetFragmentShader1();
+	//SetFragmentShader2();
+	//m_shaderProgram[0] = glCreateProgram();
+	//m_shaderProgram[1] = glCreateProgram();
+	//glAttachShader(m_shaderProgram[0], m_vsShader);
+	//glAttachShader(m_shaderProgram[0], m_fsShader[0]);
+	//glLinkProgram(m_shaderProgram[0]);
+
+	//glAttachShader(m_shaderProgram[1], m_vsShader);
+	//glAttachShader(m_shaderProgram[1], m_fsShader[1]);
+	//glLinkProgram(m_shaderProgram[1]);
+	//int success;
+	//char log[512];
+	//glGetShaderiv(m_shaderProgram[0], GL_LINK_STATUS, &success);
+	//if (!success)
+	//{
+	//	glGetShaderInfoLog(m_shaderProgram[0], 512, NULL, log);
+	//	std::cout << "Failed to link shader " << log << std::endl;
+	//}
+	//glDeleteShader(m_vsShader);
+	//glDeleteShader(m_fsShader[0]);
+	//glDeleteShader(m_fsShader[1]);
 }
 
 void MyOpenGL::SetVertexAttribute()
@@ -186,11 +189,12 @@ void MyOpenGL::SetVertexConfig()
 
 void MyOpenGL::Render()
 {
-	glUseProgram(m_shaderProgram[0]);
+	m_shader->use();
+	//glUseProgram(m_shaderProgram[0]);
 	glBindVertexArray(m_VAO[0]);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glUseProgram(m_shaderProgram[1]);
+	//glUseProgram(m_shaderProgram[1]);
 	glBindVertexArray(m_VAO[1]);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
