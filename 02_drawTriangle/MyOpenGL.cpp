@@ -3,7 +3,7 @@
 #include <string>
 
 MyOpenGL::MyOpenGL(int width, int height)
-	:m_verticesSize(9), m_indexSize(6),
+	:m_verticesSize(18), m_indexSize(6),
 	m_vertices1(new float[m_verticesSize]),
 	m_vertices2(new float[m_verticesSize]),
 	m_index(new int[m_indexSize]),
@@ -11,14 +11,14 @@ MyOpenGL::MyOpenGL(int width, int height)
 {
 
 	float vertices1[] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.0f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f};
+		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+		 0.0f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+		 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f};
 	
 	float vertices2[] = {
-		 0.0f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.5f,  0.5f, 0.0f};
+		 0.0f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+		 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f };
 
 	int index[] = {
 		0,1,2,
@@ -65,106 +65,19 @@ void MyOpenGL::SetIndexData()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * m_indexSize, m_index.get(), GL_STATIC_DRAW);
 }
 
-void MyOpenGL::SetVertexShader()
-{
-	const char* vertexShaderSources =
-		"#version 330 core\n"
-		"layout(location = 0) in vec3 aPos;\n"
-		"void main()\n"
-		"{\n"
-		"	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-		"}\n";
-
-	m_vsShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(m_vsShader, 1, &vertexShaderSources, NULL);
-	glCompileShader(m_vsShader);
-	int success;
-	char log[512];
-	glGetShaderiv(m_vsShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(m_vsShader, 512, NULL, log);
-		std::cout << "Failed to Compile vertex shader " << log << std::endl;
-	}
-}
-
-void MyOpenGL::SetFragmentShader1()
-{
-	const char* fragShaderSources =
-		"#version 330 core\n"
-		"out vec4 FragColor;\n"
-		"void main()\n"
-		"{\n"
-		"	FragColor = vec4(1.0f, 1.0f, 0.0f, 1.0f);\n"
-		"}\n";
-	m_fsShader[0] = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(m_fsShader[0], 1, &fragShaderSources, NULL);
-	glCompileShader(m_fsShader[0]);
-	int success;
-	char log[512];
-	glGetShaderiv(m_fsShader[0], GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(m_fsShader[0], 512, NULL, log);
-		std::cout << "Failed to Compile fragment shader " << log << std::endl;
-	}
-}
-
-void MyOpenGL::SetFragmentShader2()
-{
-	const char* fragShaderSources =
-		"#version 330 core\n"
-		"out vec4 FragColor;\n"
-		"void main()\n"
-		"{\n"
-		"	FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-		"}\n";
-	m_fsShader[1] = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(m_fsShader[1], 1, &fragShaderSources, NULL);
-	glCompileShader(m_fsShader[1]);
-	int success;
-	char log[512];
-	glGetShaderiv(m_fsShader[1], GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(m_fsShader[1], 512, NULL, log);
-		std::cout << "Failed to Compile fragment shader " << log << std::endl;
-	}
-}
-
 void MyOpenGL::BuildShaderProgram()
 {
 	m_shader = new MyShader("D:\\1_WorkSpace\\1_Coding\\OpenGL\\02_drawTriangle\\shader.vs", 
 		"D:\\1_WorkSpace\\1_Coding\\OpenGL\\02_drawTriangle\\shader.fs");
-	//SetVertexShader();
-	//SetFragmentShader1();
-	//SetFragmentShader2();
-	//m_shaderProgram[0] = glCreateProgram();
-	//m_shaderProgram[1] = glCreateProgram();
-	//glAttachShader(m_shaderProgram[0], m_vsShader);
-	//glAttachShader(m_shaderProgram[0], m_fsShader[0]);
-	//glLinkProgram(m_shaderProgram[0]);
-
-	//glAttachShader(m_shaderProgram[1], m_vsShader);
-	//glAttachShader(m_shaderProgram[1], m_fsShader[1]);
-	//glLinkProgram(m_shaderProgram[1]);
-	//int success;
-	//char log[512];
-	//glGetShaderiv(m_shaderProgram[0], GL_LINK_STATUS, &success);
-	//if (!success)
-	//{
-	//	glGetShaderInfoLog(m_shaderProgram[0], 512, NULL, log);
-	//	std::cout << "Failed to link shader " << log << std::endl;
-	//}
-	//glDeleteShader(m_vsShader);
-	//glDeleteShader(m_fsShader[0]);
-	//glDeleteShader(m_fsShader[1]);
 }
 
 void MyOpenGL::SetVertexAttribute()
 {
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
+	glEnableVertexAttribArray(1);
 }
 
 void MyOpenGL::SetVertexConfig()
@@ -189,13 +102,8 @@ void MyOpenGL::SetVertexConfig()
 void MyOpenGL::Render()
 {
 	m_shader->use();
-	glUniform4f(glGetUniformLocation(m_shader->ID, "color"), 0.0f, 1.0f, 0.0f, 1.0f);
-
-	//glUseProgram(m_shaderProgram[0]);
 	glBindVertexArray(m_VAO[0]);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	//glUseProgram(m_shaderProgram[1]);
 	glBindVertexArray(m_VAO[1]);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
