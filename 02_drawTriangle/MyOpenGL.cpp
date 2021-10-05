@@ -74,7 +74,6 @@ void MyOpenGL::SetVertexConfig()
 void MyOpenGL::Render()
 {
 	m_shader->use();
-	m_shader->setFloat("offSet", 0.3f);
 	glBindVertexArray(m_VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
