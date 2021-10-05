@@ -3,17 +3,25 @@
 #include <string>
 
 MyOpenGL::MyOpenGL(int width, int height)
-	:m_vertices(nullptr), m_width(width), m_height(height)
+	:m_verticesSize(12), m_indexSize(6),
+	m_vertices(new float[m_verticesSize]),
+	m_index(new int[m_indexSize]),
+	m_width(width), m_height(height)
 {
-	m_verticesSize = 9;
-	m_vertices = new float[m_verticesSize];
 
 	float vertices[] = {
 		-0.5f, -0.5f, 0.0f,
 		0.5f, -0.5f, 0.0f,
-		0.5f, 0.5f, 0.0f
+		0.5f, 0.5f, 0.0f,
+		-0.5f, 0.5f, 0.0f
 	};
-	memcpy(m_vertices, vertices, m_verticesSize * sizeof(float));
+
+	int index[] = {
+		0,1,2,
+		0,2,3
+	};
+	memcpy(m_vertices.get(), vertices, m_verticesSize * sizeof(float));
+	memcpy(m_index.get(), index, m_indexSize * sizeof(int));
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -23,7 +31,7 @@ MyOpenGL::MyOpenGL(int width, int height)
 
 MyOpenGL::~MyOpenGL()
 {
-	delete[] m_vertices;
+
 }
 
 void MyOpenGL::SetViewPort()
@@ -35,7 +43,14 @@ void MyOpenGL::SetVertexData()
 {
 	glGenBuffers(1, &m_VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_verticesSize, m_vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_verticesSize, m_vertices.get(), GL_STATIC_DRAW);
+}
+
+void MyOpenGL::SetIndexData()
+{
+	glGenBuffers(1, &m_EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * m_indexSize, m_index.get(), GL_STATIC_DRAW);
 }
 
 void MyOpenGL::SetVertexShader()
@@ -115,6 +130,7 @@ void MyOpenGL::SetVertexConfig()
 	glBindVertexArray(m_VAO);
 	SetVertexData();
 	SetVertexAttribute();
+	SetIndexData();
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
@@ -123,7 +139,8 @@ void MyOpenGL::Render()
 {
 	glUseProgram(m_shaderProgram);
 	glBindVertexArray(m_VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	//glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 void MyOpenGL::Destroy()
