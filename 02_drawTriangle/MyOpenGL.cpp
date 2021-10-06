@@ -1,9 +1,7 @@
 #include "MyOpenGL.h"
 #include <iostream>
 #include <string>
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtc/type_ptr.hpp"
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -89,6 +87,7 @@ void MyOpenGL::SetVertexConfig()
 	glBindVertexArray(0);
 
 	SetTexture();
+	SetMatrix();
 }
 
 void MyOpenGL::SetTexture()
@@ -120,25 +119,14 @@ void MyOpenGL::SetTexture()
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void MyOpenGL::SetTransform1()
+void MyOpenGL::SetTransform()
 {
-	glm::mat4 trans = glm::mat4(1.0f);
-	trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-	trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0, 0.0, 1.0));
-
-	unsigned int transformLoc = glGetUniformLocation(m_shader->ID, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-}
-
-void MyOpenGL::SetTransform2()
-{
-	glm::mat4 trans = glm::mat4(1.0f);
-	trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
-	float scale = glm::sin(glfwGetTime());
-	trans = glm::scale(trans, glm::vec3(scale, scale, scale));
-
-	unsigned int transformLoc = glGetUniformLocation(m_shader->ID, "transform");
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+	unsigned int transformLoc = glGetUniformLocation(m_shader->ID, "model");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(m_model));
+	transformLoc = glGetUniformLocation(m_shader->ID, "view");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(m_view));
+	transformLoc = glGetUniformLocation(m_shader->ID, "projection");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(m_projection));
 }
 
 void MyOpenGL::Render()
@@ -147,7 +135,7 @@ void MyOpenGL::Render()
 	m_shader->setInt("myTexure1", 0);
 	m_shader->setInt("myTexure2", 1);
 	m_shader->setFloat("alpha", g_alpha);
-	SetTransform1();
+	SetTransform();
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_texture[0]);
 	glActiveTexture(GL_TEXTURE1);
@@ -155,9 +143,13 @@ void MyOpenGL::Render()
 	glBindVertexArray(m_VAO);
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	SetTransform2();
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
 
+void MyOpenGL::SetMatrix()
+{
+	m_model = glm::rotate(m_model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	m_view = glm::translate(m_view, glm::vec3(0.0f, 0.0f, -3.0f));
+	m_projection = glm::perspective(glm::radians(45.0f), (float)m_width / (float)m_height, 0.1f, 100.0f);
 }
 
 void MyOpenGL::ChangeAlpha(bool isUp)
