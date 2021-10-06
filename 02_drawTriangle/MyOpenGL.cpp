@@ -8,22 +8,63 @@
 float g_alpha = 0.5 ;
 
 MyOpenGL::MyOpenGL(int width, int height)
-	:m_verticesSize(32), m_indexSize(6),
+	:m_verticesSize(120), m_indexSize(36),
 	m_vertices(new float[m_verticesSize]),
 	m_index(new int[m_indexSize]),
 	m_width(width), m_height(height)
 {
 
 	float vertices[] = {
-		// 位置              颜色            纹理坐标
-		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-		 0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-		-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f};
+		// 位置            纹理坐标
+		// 正面
+		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+		 0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+		 0.5f,  0.5f, 0.5f, 1.0f, 1.0f,
+		-0.5f,  0.5f, 0.5f, 0.0f, 1.0f,
+		// 背面
+		 0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
+		// 左面
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
+		// 右面
+		 0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f, 0.0f, 1.0f,
+
+		// 上面
+		-0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 
+		-0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
+
+		// 下面
+		 0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f, 0.0f, 1.0f
+	
+	};
 
 	int index[] = {
 		0, 1, 2,
-		0, 2, 3 };
+		0, 2, 3,
+		4, 6, 5,
+		4, 7, 6,
+		8, 9, 10,
+		8, 10, 11,
+		12, 13, 14,
+		12, 14, 15,
+		16, 17, 18,
+		16, 18, 19,
+		20, 21, 22,
+		20, 22, 23
+	};
 
 	memcpy(m_vertices.get(), vertices, m_verticesSize * sizeof(float));
 	memcpy(m_index.get(), index, m_indexSize * sizeof(float));
@@ -66,14 +107,11 @@ void MyOpenGL::BuildShaderProgram()
 
 void MyOpenGL::SetVertexAttribute()
 {
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
 }
 
 void MyOpenGL::SetVertexConfig()
@@ -88,6 +126,7 @@ void MyOpenGL::SetVertexConfig()
 
 	SetTexture();
 	SetMatrix();
+	glEnable(GL_DEPTH_TEST);
 }
 
 void MyOpenGL::SetTexture()
@@ -131,18 +170,21 @@ void MyOpenGL::SetTransform()
 
 void MyOpenGL::Render()
 {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	m_shader->use();
 	m_shader->setInt("myTexure1", 0);
 	m_shader->setInt("myTexure2", 1);
 	m_shader->setFloat("alpha", g_alpha);
 	SetTransform();
+	m_model = glm::mat4(1.0f);
+	m_model = glm::rotate(m_model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_texture[0]);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, m_texture[1]);
 	glBindVertexArray(m_VAO);
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 }
 
 void MyOpenGL::SetMatrix()

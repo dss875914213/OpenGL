@@ -1,7 +1,6 @@
 #version 330 core
 
 out vec4 fragColor;
-in vec3 toFragmentColor;
 in vec2 toFragmentTextureCoord;
 uniform sampler2D myTexure1;
 uniform sampler2D myTexure2;
