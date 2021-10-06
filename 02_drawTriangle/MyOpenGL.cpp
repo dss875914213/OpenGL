@@ -1,20 +1,29 @@
 #include "MyOpenGL.h"
 #include <iostream>
 #include <string>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 MyOpenGL::MyOpenGL(int width, int height)
-	:m_verticesSize(18), m_indexSize(6),
+	:m_verticesSize(32), m_indexSize(6),
 	m_vertices(new float[m_verticesSize]),
 	m_index(new int[m_indexSize]),
 	m_width(width), m_height(height)
 {
 
-	float vertices1[] = {
-		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-		 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f};
+	float vertices[] = {
+		// 位置              颜色            纹理坐标
+		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		 0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+		-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f};
 
-	memcpy(m_vertices.get(), vertices1, m_verticesSize * sizeof(float));
+	int index[] = {
+		0, 1, 2,
+		0, 2, 3 };
+
+	memcpy(m_vertices.get(), vertices, m_verticesSize * sizeof(float));
+	memcpy(m_index.get(), index, m_indexSize * sizeof(float));
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -54,11 +63,14 @@ void MyOpenGL::BuildShaderProgram()
 
 void MyOpenGL::SetVertexAttribute()
 {
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 }
 
 void MyOpenGL::SetVertexConfig()
@@ -66,16 +78,53 @@ void MyOpenGL::SetVertexConfig()
 	glGenVertexArrays(1, &m_VAO);
 	glBindVertexArray(m_VAO);
 	SetVertexData();
+	SetIndexData();
 	SetVertexAttribute();
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+
+	SetTexture();
+}
+
+void MyOpenGL::SetTexture()
+{
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	stbi_set_flip_vertically_on_load(true);
+
+	m_imageData[0] = stbi_load("D:\\1_WorkSpace\\1_Coding\\OpenGL\\Dependencies\\resource\\container.jpg", &m_imageWidth[0], &m_imageHeight[0], &m_imageChannels[0], 0);
+	m_imageData[1] = stbi_load("D:\\1_WorkSpace\\1_Coding\\OpenGL\\Dependencies\\resource\\awesomeface.png", &m_imageWidth[1], &m_imageHeight[1], &m_imageChannels[1], 0);
+	glGenTextures(1, &m_texture[0]);
+	glGenTextures(1, &m_texture[1]);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_texture[0]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_imageWidth[0], m_imageHeight[0], 0, GL_RGB, GL_UNSIGNED_BYTE, m_imageData[0]);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, m_texture[1]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_imageWidth[1], m_imageHeight[1], 0, GL_RGBA, GL_UNSIGNED_BYTE, m_imageData[1]);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	stbi_image_free(m_imageData[0]);
+	stbi_image_free(m_imageData[1]);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void MyOpenGL::Render()
 {
 	m_shader->use();
+	m_shader->setInt("myTexure1", 0);
+	m_shader->setInt("myTexure2", 1);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, m_texture[0]);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, m_texture[1]);
 	glBindVertexArray(m_VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	//glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 void MyOpenGL::Destroy()

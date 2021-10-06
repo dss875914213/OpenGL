@@ -14,8 +14,6 @@ int main()
 	glfwWindow->CreateWindow();
 	
 	glfwWindow->Run();
-	//std::thread t = std::thread(&GLFWWindow::Run, glfwWindow);
-	//t.join();
 	glfwWindow->Destroy();
 }
 

@@ -15,6 +15,7 @@ public:
 	void BuildShaderProgram();
 	void SetVertexAttribute();
 	void SetVertexConfig();
+	void SetTexture();
 	void Render();
 	void Destroy();
 private:
@@ -31,6 +32,10 @@ private:
 	unsigned int m_fsShader;
 	unsigned int m_shaderProgram;
 	MyShader* m_shader;
-
+	int m_imageWidth[2];
+	int m_imageHeight[2];
+	int m_imageChannels[2];
+	unsigned char* m_imageData[2] = { NULL, NULL };
+	unsigned int m_texture[2];
 };
 
