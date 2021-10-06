@@ -65,6 +65,12 @@ MyOpenGL::MyOpenGL(int width, int height)
 		20, 21, 22,
 		20, 22, 23
 	};
+	m_cubePositions = new glm::vec3[5];
+	m_cubePositions[0] = glm::vec3(0.0f, 0.0f, 0.0f);
+	m_cubePositions[1] = glm::vec3(0.3f, 0.0f, 0.0f);
+	m_cubePositions[2] = glm::vec3(0.0f, 0.3f, 0.0f);
+	m_cubePositions[3] = glm::vec3(-0.3f, 0.0f, 0.0f);
+	m_cubePositions[4] = glm::vec3(0.0f, -0.3f, 0.0f);
 
 	memcpy(m_vertices.get(), vertices, m_verticesSize * sizeof(float));
 	memcpy(m_index.get(), index, m_indexSize * sizeof(float));
@@ -175,16 +181,22 @@ void MyOpenGL::Render()
 	m_shader->setInt("myTexure1", 0);
 	m_shader->setInt("myTexure2", 1);
 	m_shader->setFloat("alpha", g_alpha);
-	SetTransform();
-	m_model = glm::mat4(1.0f);
-	m_model = glm::rotate(m_model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_texture[0]);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, m_texture[1]);
 	glBindVertexArray(m_VAO);
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	for (int i = 0; i < 5; i++)
+	{
+		m_model = glm::mat4(1.0f);
+		m_model = glm::translate(m_model, m_cubePositions[i]);
+		m_model = glm::rotate(m_model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+		m_model = glm::scale(m_model, glm::vec3(0.2f, 0.2f, 0.2f));
+		SetTransform();		
+
+		glDrawElements(GL_TRIANGLES, m_indexSize, GL_UNSIGNED_INT, 0);
+	}
 }
 
 void MyOpenGL::SetMatrix()
