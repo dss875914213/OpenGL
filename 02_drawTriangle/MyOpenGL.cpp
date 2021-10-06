@@ -4,6 +4,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+float g_alpha = 0.5 ;
+
 MyOpenGL::MyOpenGL(int width, int height)
 	:m_verticesSize(32), m_indexSize(6),
 	m_vertices(new float[m_verticesSize]),
@@ -13,10 +15,10 @@ MyOpenGL::MyOpenGL(int width, int height)
 
 	float vertices[] = {
 		// 位置              颜色            纹理坐标
-		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.49f, 0.49f,
-		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.51f, 0.49f,
-		 0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.51f, 0.51f,
-		-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.49f, 0.51f};
+		-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		 0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+		-0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f};
 
 	int index[] = {
 		0, 1, 2,
@@ -120,6 +122,7 @@ void MyOpenGL::Render()
 	m_shader->use();
 	m_shader->setInt("myTexure1", 0);
 	m_shader->setInt("myTexure2", 1);
+	m_shader->setFloat("alpha", g_alpha);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_texture[0]);
 	glActiveTexture(GL_TEXTURE1);
@@ -127,6 +130,20 @@ void MyOpenGL::Render()
 	glBindVertexArray(m_VAO);
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+
+void MyOpenGL::ChangeAlpha(bool isUp)
+{
+	if (isUp)
+	{
+		g_alpha += 0.1;
+	}
+	else
+	{
+		g_alpha -= 0.1;
+	}
+	g_alpha = g_alpha >= 1.0 ? 1.0 : g_alpha;
+	g_alpha = g_alpha <= 0.0 ? 0.0 : g_alpha;
 }
 
 void MyOpenGL::Destroy()

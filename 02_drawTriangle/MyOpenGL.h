@@ -17,6 +17,7 @@ public:
 	void SetVertexConfig();
 	void SetTexture();
 	void Render();
+	static void ChangeAlpha(bool isUp);
 	void Destroy();
 private:
 	int m_verticesSize;

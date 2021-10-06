@@ -57,4 +57,12 @@ void GLFWWindow::processInput(GLFWwindow* window, int key, int scancode, int act
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
+	else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	{
+		MyOpenGL::ChangeAlpha(true);
+	}
+	else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	{
+		MyOpenGL::ChangeAlpha(false);
+	}
 }
