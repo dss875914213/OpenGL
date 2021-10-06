@@ -120,11 +120,22 @@ void MyOpenGL::SetTexture()
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void MyOpenGL::SetTransform()
+void MyOpenGL::SetTransform1()
 {
 	glm::mat4 trans = glm::mat4(1.0f);
 	trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
 	trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0, 0.0, 1.0));
+
+	unsigned int transformLoc = glGetUniformLocation(m_shader->ID, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+}
+
+void MyOpenGL::SetTransform2()
+{
+	glm::mat4 trans = glm::mat4(1.0f);
+	trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
+	float scale = glm::sin(glfwGetTime());
+	trans = glm::scale(trans, glm::vec3(scale, scale, scale));
 
 	unsigned int transformLoc = glGetUniformLocation(m_shader->ID, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
@@ -136,7 +147,7 @@ void MyOpenGL::Render()
 	m_shader->setInt("myTexure1", 0);
 	m_shader->setInt("myTexure2", 1);
 	m_shader->setFloat("alpha", g_alpha);
-	SetTransform();
+	SetTransform1();
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, m_texture[0]);
 	glActiveTexture(GL_TEXTURE1);
@@ -144,6 +155,9 @@ void MyOpenGL::Render()
 	glBindVertexArray(m_VAO);
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	SetTransform2();
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 }
 
 void MyOpenGL::ChangeAlpha(bool isUp)

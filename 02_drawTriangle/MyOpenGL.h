@@ -16,7 +16,8 @@ public:
 	void SetVertexAttribute();
 	void SetVertexConfig();
 	void SetTexture();
-	void SetTransform();
+	void SetTransform1();
+	void SetTransform2();
 	void Render();
 	static void ChangeAlpha(bool isUp);
 	void Destroy();
