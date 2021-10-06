@@ -5,7 +5,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-float g_alpha = 0.5 ;
+float g_alpha = 0.5;
 
 MyOpenGL::MyOpenGL(int width, int height)
 	:m_verticesSize(120), m_indexSize(36),
@@ -26,29 +26,29 @@ MyOpenGL::MyOpenGL(int width, int height)
 		-0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
 		-0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
 		 0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
-		// 左面
-		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
-		// 右面
-		 0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
-		 0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f, 0.0f, 1.0f,
+		 // 左面
+		 -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+		 -0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
+		 -0.5f,  0.5f,  0.5f, 1.0f, 1.0f,
+		 -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
+		 // 右面
+		  0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+		  0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+		  0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
+		  0.5f,  0.5f,  0.5f, 0.0f, 1.0f,
 
-		// 上面
-		-0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 
-		-0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
+		  // 上面
+		  -0.5f,  0.5f,  0.5f, 0.0f, 0.0f,
+		   0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
+		   0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
+		  -0.5f,  0.5f, -0.5f, 0.0f, 1.0f,
 
-		// 下面
-		 0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f, 0.0f, 1.0f
-	
+		  // 下面
+		   0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
+		  -0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
+		  -0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+		   0.5f, -0.5f, -0.5f, 0.0f, 1.0f
+
 	};
 
 	int index[] = {
@@ -107,7 +107,7 @@ void MyOpenGL::SetIndexData()
 
 void MyOpenGL::BuildShaderProgram()
 {
-	m_shader = new MyShader("D:\\1_WorkSpace\\1_Coding\\OpenGL\\02_drawTriangle\\shader.vs", 
+	m_shader = new MyShader("D:\\1_WorkSpace\\1_Coding\\OpenGL\\02_drawTriangle\\shader.vs",
 		"D:\\1_WorkSpace\\1_Coding\\OpenGL\\02_drawTriangle\\shader.fs");
 }
 
@@ -191,9 +191,10 @@ void MyOpenGL::Render()
 	{
 		m_model = glm::mat4(1.0f);
 		m_model = glm::translate(m_model, m_cubePositions[i]);
-		m_model = glm::rotate(m_model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+		if (i % 3 == 0)
+			m_model = glm::rotate(m_model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		m_model = glm::scale(m_model, glm::vec3(0.2f, 0.2f, 0.2f));
-		SetTransform();		
+		SetTransform();
 
 		glDrawElements(GL_TRIANGLES, m_indexSize, GL_UNSIGNED_INT, 0);
 	}
@@ -202,7 +203,7 @@ void MyOpenGL::Render()
 void MyOpenGL::SetMatrix()
 {
 	m_model = glm::rotate(m_model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	m_view = glm::translate(m_view, glm::vec3(0.0f, 0.0f, -3.0f));
+	m_view = glm::translate(m_view, glm::vec3(0.5f, 0.5f, -3.0f));
 	m_projection = glm::perspective(glm::radians(45.0f), (float)m_width / (float)m_height, 0.1f, 100.0f);
 }
 
