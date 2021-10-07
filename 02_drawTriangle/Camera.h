@@ -9,8 +9,10 @@ public:
 	static Camera* GetInstance();
 	glm::mat4 calculate1();
 	glm::mat4 calculate2();
-	void changeValue();
-	void changeValue(char order);
+	void changeCameraPos();
+	void changeCameraPos(char order);
+	void changeCameraFront(float xoffset, float yoffset);
+	void setCameraSpeed(float deltaTime);
 
 private:
 	Camera();
@@ -21,5 +23,8 @@ private:
 	glm::vec3 m_cameraFront;
 	glm::vec3 m_cameraUp;
 	glm::mat4 m_view;
+	float m_cameraSpeed;
+	float m_pitch = 0.0f;
+	float m_yam = -90.0f;
 };
 

@@ -13,7 +13,8 @@ public:
 	void Destroy();
 	void Run();
 private:
-	static void processInput(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+	static void mouseCallback(GLFWwindow* window, double xpos, double ypos);
 private:
 	int m_width;
 	int m_height;

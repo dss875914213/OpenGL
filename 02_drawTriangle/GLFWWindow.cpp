@@ -23,7 +23,10 @@ bool GLFWWindow::CreateWindow()
 		return false;
 	}
 	glfwMakeContextCurrent(m_window);
-	glfwSetKeyCallback(m_window, processInput);
+
+	glfwSetKeyCallback(m_window, keyboardCallback);
+	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPosCallback(m_window, mouseCallback);
 	m_openGL = new MyOpenGL(m_width, m_height);
 
 	m_openGL->SetVertexConfig();
@@ -41,6 +44,9 @@ void GLFWWindow::Destroy()
 
 void GLFWWindow::Run()
 {
+	float lastTime, nowTime;
+	nowTime = glfwGetTime();
+	lastTime = nowTime;
 	while (!glfwWindowShouldClose(m_window))
 	{
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -49,10 +55,13 @@ void GLFWWindow::Run()
 		m_openGL->Render();
 		glfwSwapBuffers(m_window);
 		glfwPollEvents();
+		nowTime = glfwGetTime();
+		Camera::GetInstance()->setCameraSpeed(nowTime - lastTime);
+		lastTime = nowTime;
 	}
 }
 
-void GLFWWindow::processInput(GLFWwindow* window, int key, int scancode, int action, int mods)
+void GLFWWindow::keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
@@ -68,18 +77,31 @@ void GLFWWindow::processInput(GLFWwindow* window, int key, int scancode, int act
 	}
 	else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		Camera::GetInstance()->changeValue('w');
+		Camera::GetInstance()->changeCameraPos('w');
 	}
 	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		Camera::GetInstance()->changeValue('s');
+		Camera::GetInstance()->changeCameraPos('s');
 	}
 	else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		Camera::GetInstance()->changeValue('a');
+		Camera::GetInstance()->changeCameraPos('a');
 	}
 	else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		Camera::GetInstance()->changeValue('d');
+		Camera::GetInstance()->changeCameraPos('d');
 	}
+}
+
+void GLFWWindow::mouseCallback(GLFWwindow* window, double xpos, double ypos)
+{
+	static float lastXpos = xpos, lastYpos = ypos;
+	float sensitivity = 0.05f;
+	float xOffset, yOffset;
+	xOffset = (xpos - lastXpos) * sensitivity;
+	yOffset = (lastYpos - ypos) * sensitivity;
+	lastXpos = xpos;
+	lastYpos = ypos;
+
+	Camera::GetInstance()->changeCameraFront(xOffset, yOffset);
 }
