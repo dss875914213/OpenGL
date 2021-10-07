@@ -46,7 +46,5 @@ private:
 	unsigned int m_texture[2];
 	glm::mat4 m_model = glm::mat4(1.0f), m_view = glm::mat4(1.0f), m_projection = glm::mat4(1.0f);
 	glm::vec3 *m_cubePositions = NULL;
-
-	Camera* m_camera;
 };
 

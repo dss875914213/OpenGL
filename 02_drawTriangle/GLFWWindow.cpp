@@ -66,4 +66,20 @@ void GLFWWindow::processInput(GLFWwindow* window, int key, int scancode, int act
 	{
 		MyOpenGL::ChangeAlpha(false);
 	}
+	else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	{
+		Camera::GetInstance()->changeValue('w');
+	}
+	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	{
+		Camera::GetInstance()->changeValue('s');
+	}
+	else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		Camera::GetInstance()->changeValue('a');
+	}
+	else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		Camera::GetInstance()->changeValue('d');
+	}
 }

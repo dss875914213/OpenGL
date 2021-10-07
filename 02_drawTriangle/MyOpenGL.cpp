@@ -11,8 +11,7 @@ MyOpenGL::MyOpenGL(int width, int height)
 	:m_verticesSize(120), m_indexSize(36),
 	m_vertices(new float[m_verticesSize]),
 	m_index(new int[m_indexSize]),
-	m_width(width), m_height(height),
-	m_camera(new Camera())
+	m_width(width), m_height(height)
 {
 
 	float vertices[] = {
@@ -189,8 +188,8 @@ void MyOpenGL::Render()
 	glBindVertexArray(m_VAO);
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	m_camera->changeValue();
-	m_view = m_camera->calculate();
+	//Camera::GetInstance()->changeValue();
+	m_view = Camera::GetInstance()->calculate2();
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -232,3 +231,4 @@ void MyOpenGL::Destroy()
 	glDeleteBuffers(1, &m_VBO);
 	glDeleteProgram(m_shaderProgram);
 }
+

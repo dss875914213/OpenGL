@@ -6,11 +6,17 @@
 class Camera
 {
 public:
-	Camera();
-	glm::mat4 calculate();
+	static Camera* GetInstance();
+	glm::mat4 calculate1();
+	glm::mat4 calculate2();
 	void changeValue();
+	void changeValue(char order);
 
 private:
+	Camera();
+
+private:
+	static Camera* m_camera;
 	glm::vec3 m_cameraPos;
 	glm::vec3 m_cameraFront;
 	glm::vec3 m_cameraUp;
