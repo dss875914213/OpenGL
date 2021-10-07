@@ -55,8 +55,8 @@ MyOpenGL::MyOpenGL(int width, int height)
 	int index[] = {
 		0, 1, 2,
 		0, 2, 3,
-		4, 6, 5,
-		4, 7, 6,
+		4, 5, 6,
+		4, 6, 7,
 		8, 9, 10,
 		8, 10, 11,
 		12, 13, 14,
@@ -134,6 +134,7 @@ void MyOpenGL::SetVertexConfig()
 	SetTexture();
 	SetMatrix();
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 }
 
 void MyOpenGL::SetTexture()
@@ -189,7 +190,6 @@ void MyOpenGL::Render()
 	glBindVertexArray(m_VAO);
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	//Camera::GetInstance()->changeValue();
 	m_view = Camera::GetInstance()->calculate2();
 	m_projection = glm::perspective(glm::radians(Camera::GetInstance()->GetFov()), (float)m_width / (float)m_height, 0.1f, 100.0f);
 	for (int i = 0; i < 5; i++)
@@ -197,17 +197,17 @@ void MyOpenGL::Render()
 		m_model = glm::mat4(1.0f);
 		m_model = glm::translate(m_model, m_cubePositions[i]);
 		if (i % 3 == 0)
-			m_model = glm::rotate(m_model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+			m_model = glm::rotate(m_model, (float)glfwGetTime()* glm::radians(50.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		m_model = glm::scale(m_model, glm::vec3(0.2f, 0.2f, 0.2f));
 		SetTransform();
 		
-		glDrawElements(GL_TRIANGLES, m_indexSize, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	}
 }
 
 void MyOpenGL::SetMatrix()
 {
-	m_model = glm::rotate(m_model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	m_model = glm::rotate(m_model, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	m_view = glm::translate(m_view, glm::vec3(0.5f, 0.5f, -3.0f));
 	m_projection = glm::perspective(glm::radians(45.0f), (float)m_width / (float)m_height, 0.1f, 100.0f);
 }
