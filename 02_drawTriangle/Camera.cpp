@@ -56,6 +56,18 @@ void Camera::setCameraSpeed(float deltaTime)
 	m_cameraSpeed = 2.5f * deltaTime;
 }
 
+void Camera::SetFov(double offset)
+{
+	m_fov -= offset;
+	m_fov = m_fov <= 1.0f ? 1.0f : m_fov;
+	m_fov = m_fov >= 45.0f ? 45.0f : m_fov;
+}
+
+float Camera::GetFov()
+{
+	return m_fov;
+}
+
 Camera* Camera::GetInstance()
 {
 	if (Camera::m_camera == NULL)

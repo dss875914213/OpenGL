@@ -27,6 +27,7 @@ bool GLFWWindow::CreateWindow()
 	glfwSetKeyCallback(m_window, keyboardCallback);
 	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(m_window, mouseCallback);
+	glfwSetScrollCallback(m_window, scrollCallback);
 	m_openGL = new MyOpenGL(m_width, m_height);
 
 	m_openGL->SetVertexConfig();
@@ -104,4 +105,9 @@ void GLFWWindow::mouseCallback(GLFWwindow* window, double xpos, double ypos)
 	lastYpos = ypos;
 
 	Camera::GetInstance()->changeCameraFront(xOffset, yOffset);
+}
+
+void GLFWWindow::scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	Camera::GetInstance()->SetFov(yoffset);
 }

@@ -15,6 +15,7 @@ public:
 private:
 	static void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static void mouseCallback(GLFWwindow* window, double xpos, double ypos);
+	static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 private:
 	int m_width;
 	int m_height;

@@ -13,6 +13,8 @@ public:
 	void changeCameraPos(char order);
 	void changeCameraFront(float xoffset, float yoffset);
 	void setCameraSpeed(float deltaTime);
+	void SetFov(double offset);
+	float GetFov();
 
 private:
 	Camera();
@@ -26,5 +28,6 @@ private:
 	float m_cameraSpeed;
 	float m_pitch = 0.0f;
 	float m_yam = -90.0f;
+	float m_fov = 45;
 };
 

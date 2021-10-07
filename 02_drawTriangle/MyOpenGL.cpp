@@ -7,6 +7,7 @@
 
 float g_alpha = 0.5;
 
+
 MyOpenGL::MyOpenGL(int width, int height)
 	:m_verticesSize(120), m_indexSize(36),
 	m_vertices(new float[m_verticesSize]),
@@ -190,7 +191,7 @@ void MyOpenGL::Render()
 
 	//Camera::GetInstance()->changeValue();
 	m_view = Camera::GetInstance()->calculate2();
-
+	m_projection = glm::perspective(glm::radians(Camera::GetInstance()->GetFov()), (float)m_width / (float)m_height, 0.1f, 100.0f);
 	for (int i = 0; i < 5; i++)
 	{
 		m_model = glm::mat4(1.0f);
