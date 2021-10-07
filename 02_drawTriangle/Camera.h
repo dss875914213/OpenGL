@@ -15,6 +15,7 @@ public:
 	void setCameraSpeed(float deltaTime);
 	void SetFov(double offset);
 	float GetFov();
+	static glm::mat4 myLookAt(glm::vec3 pos, glm::vec3 target, glm::vec3 up);
 
 private:
 	Camera();

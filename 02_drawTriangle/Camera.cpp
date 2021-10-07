@@ -37,6 +37,7 @@ void Camera::changeCameraPos(char order)
 		m_cameraPos += glm::normalize(glm::cross(m_cameraFront, m_cameraUp)) * m_cameraSpeed;
 		break;
 	}
+	m_cameraPos.y = 0.0f;
 }
 
 void Camera::changeCameraFront(float xoffset, float yoffset)
@@ -68,6 +69,23 @@ float Camera::GetFov()
 	return m_fov;
 }
 
+glm::mat4 Camera::myLookAt(glm::vec3 pos, glm::vec3 target, glm::vec3 up)
+{
+	glm::vec3 cameraDirection = glm::normalize(pos - target);
+	glm::vec3 cameraRight = glm::normalize(glm::cross(glm::normalize(up), cameraDirection));
+	glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+	glm::mat4 rotate = glm::mat4(1.0f), translatation = glm::mat4(1.0f);
+	for (int i = 0; i < 3; i++)
+	{
+		rotate[i][0] = cameraRight[i];
+		rotate[i][1] = cameraUp[i];
+		rotate[i][2] = cameraDirection[i];
+
+		translatation[3][i] = -pos[i];
+	}
+	return rotate * translatation;
+}
+
 Camera* Camera::GetInstance()
 {
 	if (Camera::m_camera == NULL)
@@ -77,12 +95,12 @@ Camera* Camera::GetInstance()
 
 glm::mat4 Camera::calculate1()
 {
-	m_view = glm::lookAt(m_cameraPos, glm::vec3(0.0f, 0.0f, 0.0f), m_cameraUp);
+	m_view = Camera::myLookAt(m_cameraPos, glm::vec3(0.0f, 0.0f, 0.0f), m_cameraUp);
 	return m_view;
 }
 
 glm::mat4 Camera::calculate2()
 {
-	m_view = glm::lookAt(m_cameraPos, m_cameraPos+m_cameraFront, m_cameraUp);
+	m_view = Camera::myLookAt(m_cameraPos, m_cameraPos+m_cameraFront, m_cameraUp);
 	return m_view;
 }
