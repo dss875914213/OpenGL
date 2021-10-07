@@ -144,12 +144,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Dependencies\glad.c" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="GLFWWindow.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyOpenGL.cpp" />
     <ClCompile Include="MyShader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="GLFWWindow.h" />
     <ClInclude Include="MyOpenGL.h" />
     <ClInclude Include="MyShader.h" />

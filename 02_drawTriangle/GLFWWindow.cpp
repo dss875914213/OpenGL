@@ -29,6 +29,7 @@ bool GLFWWindow::CreateWindow()
 	m_openGL->SetVertexConfig();
 	m_openGL->BuildShaderProgram();
 	m_openGL->SetViewPort();
+
 	return true;
 }
 

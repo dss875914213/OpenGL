@@ -11,7 +11,8 @@ MyOpenGL::MyOpenGL(int width, int height)
 	:m_verticesSize(120), m_indexSize(36),
 	m_vertices(new float[m_verticesSize]),
 	m_index(new int[m_indexSize]),
-	m_width(width), m_height(height)
+	m_width(width), m_height(height),
+	m_camera(new Camera())
 {
 
 	float vertices[] = {
@@ -187,6 +188,10 @@ void MyOpenGL::Render()
 	glBindTexture(GL_TEXTURE_2D, m_texture[1]);
 	glBindVertexArray(m_VAO);
 	//glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	m_camera->changeValue();
+	m_view = m_camera->calculate();
+
 	for (int i = 0; i < 5; i++)
 	{
 		m_model = glm::mat4(1.0f);
@@ -195,7 +200,7 @@ void MyOpenGL::Render()
 			m_model = glm::rotate(m_model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		m_model = glm::scale(m_model, glm::vec3(0.2f, 0.2f, 0.2f));
 		SetTransform();
-
+		
 		glDrawElements(GL_TRIANGLES, m_indexSize, GL_UNSIGNED_INT, 0);
 	}
 }
