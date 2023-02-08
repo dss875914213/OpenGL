@@ -159,9 +159,24 @@ int main()
 		processInput(window);
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		
-		//ourShader.setFloat("bias", 0);
 		ourShader.use();
+
+
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 view = glm::mat4(1.0f);;
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+		glm::mat4 projection = glm::mat4(1.0f);;
+		projection = glm::perspective( glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+		unsigned int mat = glGetUniformLocation(ourShader.ID, "model");
+		glUniformMatrix4fv(mat, 1, GL_FALSE, glm::value_ptr(model));
+		mat = glGetUniformLocation(ourShader.ID, "view");
+		glUniformMatrix4fv(mat, 1, GL_FALSE, glm::value_ptr(view));
+		mat = glGetUniformLocation(ourShader.ID, "projection");
+		glUniformMatrix4fv(mat, 1, GL_FALSE, glm::value_ptr(projection));
+
+
+		//ourShader.setFloat("bias", 0);
 		trans = glm::mat4(1.0f);
 		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
 		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -179,15 +194,6 @@ int main()
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-		trans = glm::mat4(1.0f);
-		trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
-		//trans = glm::scale(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-		
-		std::cout << glfwGetTime() << std::endl;
-		trans = glm::scale(trans, glm::vec3(sin((float)glfwGetTime()), 1.0f, 1.0f));
-		transformLoc = glGetUniformLocation(ourShader.ID, "transform");
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		Sleep(30);
 		glfwSwapBuffers(window);
