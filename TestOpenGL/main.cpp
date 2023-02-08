@@ -113,8 +113,8 @@ int main()
 	// ×ÅÉ«Æ÷
 	shader ourShader("shader.vs", "shader.fs");
 
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, texture);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	while (!glfwWindowShouldClose(window))
 	{
