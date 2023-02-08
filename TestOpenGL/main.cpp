@@ -9,7 +9,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-float scale = 0.2;
+float scale = 0;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -20,9 +20,15 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 	else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-		scale += 0.1;
+	{
+		scale += 1;
+		Sleep(33);
+	}
 	else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-		scale -= 0.1;
+	{
+		scale -= 1;
+		Sleep(33);
+	}
 }
 
 int main()
@@ -224,7 +230,7 @@ int main()
 		glm::mat4 projection = glm::mat4(1.0f);
 
 		model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f+scale));
 		projection = glm::perspective( glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 		unsigned int mat = glGetUniformLocation(ourShader.ID, "model");
 		glUniformMatrix4fv(mat, 1, GL_FALSE, glm::value_ptr(model));
@@ -239,7 +245,12 @@ int main()
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, cubePositions[i]);
 			float angle = 20.0f * i;
-			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			float rotate = 1.0f;
+			if (i == 1 || i % 3 == 0)
+			{
+				rotate = (float)glfwGetTime();
+			}
+			model = glm::rotate(model, glm::radians(angle)*rotate, glm::vec3(1.0f, 0.3f, 0.5f));
 			unsigned int mat = glGetUniformLocation(ourShader.ID, "model");
 			glUniformMatrix4fv(mat, 1, GL_FALSE, glm::value_ptr(model));
 			glDrawArrays(GL_TRIANGLES, 0, 36);
