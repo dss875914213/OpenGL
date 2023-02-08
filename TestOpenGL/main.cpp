@@ -45,9 +45,9 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	float vertices[] = {
-		0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f
+		0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f
 	};
 
 	unsigned int indices[] = {
@@ -97,7 +97,7 @@ int main()
 
 		//glUseProgram(shaderProgram);
 		ourShader.use();
-		ourShader.setFloat("bias", 0.5);
+		ourShader.setFloat("bias", 0);
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
