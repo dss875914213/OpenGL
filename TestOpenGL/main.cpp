@@ -47,7 +47,14 @@ int main()
 	float vertices[] = {
 		0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
 		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f
+		0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+		//0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+		//-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+		//0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+
+		0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+		1.0f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+		0.75f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f
 	};
 
 	unsigned int indices[] = {
@@ -99,9 +106,9 @@ int main()
 		ourShader.use();
 		ourShader.setFloat("bias", 0);
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
