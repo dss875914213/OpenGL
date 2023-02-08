@@ -5,6 +5,10 @@
 #include <iostream>
 #include "Shader.h"
 #include "stb_image.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 float scale = 0.2;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -147,11 +151,24 @@ int main()
 	ourShader.use();
 	ourShader.setInt("texture1", 0);
 	ourShader.setInt("texture2", 1);
+	
+	glm::mat4 trans = glm::mat4(1.0f);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		
 		//ourShader.setFloat("bias", 0);
 		ourShader.use();
+		trans = glm::mat4(1.0f);
+		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
 		ourShader.setFloat("mixScale", scale);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture1);
@@ -161,6 +178,17 @@ int main()
 		//glDrawArrays(GL_TRIANGLES, 0, 3);
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		trans = glm::mat4(1.0f);
+		trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
+		//trans = glm::scale(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+		
+		std::cout << glfwGetTime() << std::endl;
+		trans = glm::scale(trans, glm::vec3(sin((float)glfwGetTime()), 1.0f, 1.0f));
+		transformLoc = glGetUniformLocation(ourShader.ID, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 		Sleep(30);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
