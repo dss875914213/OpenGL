@@ -1,5 +1,5 @@
 #include <glad/glad.h>
-
+#include <windows.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "Shader.h"
@@ -85,6 +85,24 @@ int main()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
+	glBindVertexArray(0);
+	// 绑定 VAO
+	unsigned int VAO2;
+	glGenVertexArrays(1, &VAO2);
+	glBindVertexArray(VAO2);
+	// 创建顶点缓冲对象
+	unsigned int VBO2;
+	glGenBuffers(1, &VBO2);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO2);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	// 位置属性
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 *6 * sizeof(float)));
+	glEnableVertexAttribArray(0);
+	// 颜色属性
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * 6 * sizeof(float) + 3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	glBindVertexArray(0);
 	// 着色器
 	shader ourShader("D:\\1_WorkSpace\\1_Coding\\OpenGL\\TestOpenGL\\shader.vs", "D:\\1_WorkSpace\\1_Coding\\OpenGL\\TestOpenGL\\shader.fs");
 
@@ -105,11 +123,22 @@ int main()
 		//glUseProgram(shaderProgram);
 		ourShader.use();
 		ourShader.setFloat("bias", 0);
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		static int add = 0;
+		if (add == 0)
+		{
+			add = 1;
+			glBindVertexArray(VAO);
+		}
+		else
+		{
+			add = 0;
+			glBindVertexArray(VAO2);
+		}
+		//glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
+		Sleep(1000);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
