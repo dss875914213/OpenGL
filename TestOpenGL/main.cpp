@@ -104,7 +104,8 @@ int main()
 	glEnableVertexAttribArray(1);
 	glBindVertexArray(0);
 	// ×ÅÉ«Æ÷
-	shader ourShader("D:\\1_WorkSpace\\1_Coding\\OpenGL\\TestOpenGL\\shader.vs", "D:\\1_WorkSpace\\1_Coding\\OpenGL\\TestOpenGL\\shader.fs");
+	shader ourShader("shader.vs", "shader.fs");
+	shader ourShader2("shader.vs", "shader2.fs");
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -121,20 +122,21 @@ int main()
 		//glClear(GL_COLOR_BUFFER_BIT);
 
 		//glUseProgram(shaderProgram);
-		ourShader.use();
 		ourShader.setFloat("bias", 0);
 		static int add = 0;
 		if (add == 0)
 		{
 			add = 1;
-			glBindVertexArray(VAO);
+			ourShader.use();
+
 		}
 		else
 		{
 			add = 0;
-			glBindVertexArray(VAO2);
+			ourShader2.use();
+
 		}
-		//glBindVertexArray(VAO);
+		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
