@@ -97,6 +97,7 @@ int main()
 
 		//glUseProgram(shaderProgram);
 		ourShader.use();
+		ourShader.setFloat("bias", 0.5);
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
